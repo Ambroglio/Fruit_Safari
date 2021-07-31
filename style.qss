@@ -1,0 +1,77 @@
+QWidget#game {
+    background-color: #BE4B4D;
+}
+
+QWidget#settings {
+    background-color: rgba(255,255,255, 0.8);
+}
+
+QLabel#title {
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-style: none;
+    border-bottom: 2px solid black;
+    margin-bottom: 10px;
+}
+
+*[cssClass="rangeInput"], *[cssClass="rangeLabel"] {
+    padding-left: 3px;
+    padding-right: 3px;
+    border: 0px;
+}
+
+*[cssClass="rangeLabel"] {
+    margin-bottom: 10px;
+}
+
+*[cssClass="rangeInput"]::groove {
+    border: 0px solid #000000;
+}
+
+*[cssClass="rangeInput"]::sub-page {
+    background: #d45555;
+    border-radius: 0px;
+    margin-top:8px;
+    margin-bottom:8px;
+}
+
+*[cssClass="rangeInput"]::add-page {
+    background: rgb(255,255,255);
+    border-radius: 56px;
+    margin-top:8px;
+    margin-bottom:8px;
+}
+
+*[cssClass="rangeInput"]::handle {
+    background: #d45555;
+    border: 0px solid rgb(102,102,102);
+    width: 3px;
+    height:1px;
+    border-radius: 7px;
+    margin-top:2px;
+    margin-bottom:2px;
+}
+
+*[cssClass="rangeInput"]::handle:hover {
+    background: #ea6b6b;
+    border: 0px solid rgb(102,102,102);
+    border-radius: 7px;
+}
+
+*[cssClass="rangeInput"]::sub-page:disabled {
+    background: #bbb;
+    border-color: #999;
+}
+
+*[cssClass="rangeInput"]::add-page:disabled {
+    background: #eee;
+    border-color: #999;
+}
+
+*[cssClass="rangeInput"]::handle:disabled {
+    background: #eee;
+    border: 0px solid #aaa;
+    border-radius: 4px;
+}

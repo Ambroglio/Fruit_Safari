@@ -1,0 +1,111 @@
+from settings import Settings
+from board import Board
+import sys
+import random
+from PySide6 import QtCore, QtWidgets
+
+class BoardWidget(QtWidgets.QWidget):
+    def __init__(self, board : Board):
+        super().__init__()
+
+        self.__board = board
+        self.__layout = QtWidgets.QGridLayout(self)
+        self.setLayout(self.__layout)
+        self.build()
+
+    def restore(self):
+        for i in reversed(range(layout.count())): 
+    widgetToRemove = layout.itemAt(i).widget()
+    # remove it from the layout list
+    layout.removeWidget(widgetToRemove)
+    # remove it from the gui
+    widgetToRemove.setParent(None)
+
+    def build(self):
+        for y in range(0, self.__board.height()):
+            for x in range(self.__board.width()):
+                button = QtWidgets.QPushButton(str(self.__board.board()[y][x])[:3])
+                button.setStyleSheet("""
+                background-color: %s;
+                color: white;
+                font-weight: bold;
+                """ % self.__board.board()[y][x].color())
+                self.__layout.addWidget(button, y, x)
+
+        # self.button.clicked.connect(self.magic)
+
+    def update_board(self, board : Board):
+        self.__board = board
+        self.build()
+
+    """ 
+    @QtCore.Slot()
+    def magic(self):
+        self.text.setText(random.choice(self.hello)) 
+    """
+
+class SettingsWidget(QtWidgets.QWidget):
+    def __init__(self, board : Board, boardWidget : BoardWidget) -> None:
+        super().__init__()
+
+        self.__board = board
+        self.__settings = board.settings()
+        self.__boardWidget = boardWidget
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setAlignment(QtCore.Qt.AlignTop)
+
+        textWidget = QtWidgets.QLabel()
+        textWidget.setText("SETTINGS")
+        textWidget.setObjectName("title")
+        textWidget.setAlignment(QtCore.Qt.AlignCenter)
+
+        nbOfCellsRange = QtWidgets.QSlider(orientation = QtCore.Qt.Horizontal)
+        nbOfCellsRange.setProperty("cssClass", "rangeInput")
+        nbOfCellsRange.setMinimum(2)
+        nbOfCellsRange.setMaximum(10)
+        nbOfCellsRange.setTickInterval(1)
+        nbOfCellsRange.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        nbOfCellsRange.valueChanged.connect(self.nbOfCellsRangeValueChange)
+
+        nbOfCellsRangeText = QtWidgets.QLabel()
+        nbOfCellsRangeText.setText("Group length : 2")
+
+        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+        self.setObjectName("settings")
+
+        self.layout.addWidget(textWidget)
+        self.layout.addWidget(nbOfCellsRange)
+        self.layout.addWidget(nbOfCellsRangeText)
+        self.setLayout(self.layout)
+
+    def nbOfCellsRangeValueChange(self):
+        print(self.sender().value())
+        self.layout.itemAt(2).widget().setText("Group length : %d" % self.sender().value())
+        self.__settings.changeMinimumWidth(self.sender().value())
+        self.__boardWidget.update_board(Board(self.__board.height(), self.__board.width()))
+        self.__boardWidget.build()
+    
+class GameWidget(QtWidgets.QWidget):
+    def __init__(self, board : Board) -> None:
+        super().__init__()
+        self.__board = board
+
+        self.layout = QtWidgets.QHBoxLayout()
+        self.__boardWidget = BoardWidget(self.__board)
+        self.layout.addWidget(SettingsWidget(self.__board, self.__boardWidget))
+        self.layout.addWidget(self.__boardWidget)
+        self.setLayout(self.layout)
+        self.layout.setContentsMargins(0,0,0,0)
+        self.setObjectName("game")
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+
+    widget = GameWidget(Board(20, 15))
+    widget.show()
+
+    with open("style.qss", "r") as f:
+        _style = f.read()
+        app.setStyleSheet(_style)
+
+    sys.exit(app.exec())
